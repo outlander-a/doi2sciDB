@@ -1,11 +1,7 @@
 // ==UserScript==
-// @name                DOI to Sci-Hub
-// @name:zh-CN          DOI跳转Sci-Hub
-// @namespace           https://greasyfork.org/users/692574
+// @name                DOI to SciDB
 // @version             1.0.31
-// @description         Highlight DOI link on the current webpage and redirect it to Sci-Hub.
-// @description:zh-CN   高亮当前页面的DOI链接，并重定向至Sci-Hub。
-// @author              Chase Choi
+// @description         Highlight DOI link on the current webpage and redirect it to SciDB.
 // @license             MIT
 // @match               https://*.sciencemag.org/*
 // @match               http*://*.webofknowledge.com/*
@@ -45,7 +41,7 @@
 // ==/UserScript==
 
 // global variables
-const defaultBaseURL = "https://sci-hub.se";
+const defaultBaseURL = "https://annas-archive.org/scidb";
 let sciHubBaseURL;
 const doiRegex = new RegExp('(10\.\\d{4,}/[-._;()/:\\w]+)');
 const completePrefix = ['http://dx.doi.org/', 'https://doi.org/', 'https://dx.doi.org/'];
@@ -53,11 +49,11 @@ const partialPrefix = ['//dx.doi.org/'];
 
 // Initialize configuration page
 GM_config.init({
-    'id': 'DOI2Sci-Hub',
+    'id': 'DOI2SciDB',
     'title': 'Settings',
     'fields': {
         'UserDefinedBaseURL': {
-            'label': 'Custom Sci-Hub URL',
+            'label': 'Custom SciDB URL',
             'type': 'text',
             'default': ''
         }
@@ -101,10 +97,10 @@ const callback = function(mutationsList, observer) {
     console.log('Skip user-defined base URL');
     GM.xmlHttpRequest({
         method: "GET",
-        url: "https://sci-hub.41610.org/",
+        url: "https://annas-archive.org/scidb/",
         onload: function (response) {
             let data = response.responseText;
-            sciHubBaseURL = $('li > a[href^="https://sci-hub"]', data).first().attr('href') ?? defaultBaseURL
+            sciHubBaseURL = $('li > a[href^="https://annas-archive.org/scidb"]', data).first().attr('href') ?? defaultBaseURL
             sciHubBaseURL += sciHubBaseURL.endsWith("/") ? "" : "/"
             redirectToSciHub()
         }
